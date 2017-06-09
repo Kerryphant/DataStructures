@@ -14,7 +14,7 @@ public interface IBinaryTree
 
     public int size();
 
-    public Node deepestBranch(boolean lef, Node p);
+    public Node deepestBranch();
 
     public int[] sortAscending();
 

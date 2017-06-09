@@ -7,8 +7,8 @@ public class BinaryTree implements IBinaryTree{
 
     int treeSize = 0;
     Node root = null;
+    private int nextEl = 0;
 
-    //pass in null for the first parameter
     //p only needs a value during the recursion which is passed in by the code
     public void add(int i_, Node p) {
         Node parent;
@@ -80,8 +80,8 @@ public class BinaryTree implements IBinaryTree{
                 current.parent.lChild = current.rChild;
 
                 //setting up left child link
-                current.lChild.parent = deepestBranch(true, current.rChild);
-                deepestBranch(true, current.rChild).lChild = current.lChild;
+                current.lChild.parent = furthestLeaf(true, current.rChild);
+                furthestLeaf(true, current.rChild).lChild = current.lChild;
 
 
                 //this is my current way of "deleting" the object from the tree.
@@ -103,7 +103,8 @@ public class BinaryTree implements IBinaryTree{
 
     }
 
-    public boolean exists(int i_, Node p) {
+
+    public boolean exists(int i_, Node p){
         Node current;
 
         if(p == null){
@@ -133,7 +134,11 @@ public class BinaryTree implements IBinaryTree{
         return treeSize;
     }
 
-    public Node deepestBranch(boolean lef, Node p) {
+    public Node deepestBranch(){
+        return null;
+    }
+
+    private Node furthestLeaf(boolean lef, Node p) {
         boolean left = lef;
         Node current;
 
@@ -145,13 +150,13 @@ public class BinaryTree implements IBinaryTree{
         }
 
         if(left && current.lChild != null){
-            return deepestBranch(lef, current.lChild);
+            return furthestLeaf(lef, current.lChild);
         }
         else if (left && current.lChild == null){
             return current;
         }
         else if(!left && current.rChild != null){
-            return deepestBranch(lef, current.rChild);
+            return furthestLeaf(lef, current.rChild);
         }
         else if(!left && current.lChild == null){
             return current;
@@ -162,17 +167,50 @@ public class BinaryTree implements IBinaryTree{
 
     }
 
-    public int[] sortAscending() {
-        int[] array = new int[size()];
+    public int[] gatherNodes(boolean asc, Node current, int[] array){
 
+        if (asc) {
+            if (current.lChild != null) {
+                gatherNodes(asc, current.lChild, array);
+            }
+
+            array[nextEl] = current.value;
+            nextEl++;
+
+            if (current.rChild != null) {
+                gatherNodes(asc, current.rChild, array);
+            }
+
+
+        } else {
+
+            if (current.rChild != null) {
+                gatherNodes(asc, current.rChild, array);
+            }
+
+            array[nextEl] = current.value;
+            nextEl++;
+
+            if (current.lChild != null) {
+                gatherNodes(asc, current.lChild, array);
+            }
+
+        }
 
         return array;
+
+    }
+
+    public int[] sortAscending() {
+        int[] array = new int[size()];
+        nextEl = 0;
+        return gatherNodes(true, getRoot(), array);
     }
 
     public int[] sortDescending() {
         int[] array = new int[size()];
-
-        return array;
+        nextEl = 0;
+        return gatherNodes(false, getRoot(), array);
     }
 
     public Node getRoot(){

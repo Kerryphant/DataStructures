@@ -47,16 +47,24 @@ public class BinaryTreeTest {
         Assert.assertEquals( 7, bObj.root.rChild.lChild.value);
         Assert.assertEquals( 10, bObj.root.rChild.rChild.value);
 
+        Assert.assertEquals(9 ,bObj.size());
 
 
-        bObj.remove(14, null);
-        bObj.remove(2, null);
+        int[] expected = new int[]{1,2,3,4,6,7,9,10,11};
 
-        Assert.assertEquals(false , bObj.exists(2, null));
+        int[] actual = bObj.sortAscending();
 
-        Assert.assertEquals(4, bObj.root.lChild.value);
-        Assert.assertEquals(3, bObj.root.lChild.lChild.value);
-        Assert.assertEquals(1, bObj.root.lChild.lChild.lChild.value);
+        for(int i = 0; i < actual.length; i++){
+            Assert.assertEquals(expected[i], actual[i]);
+        }
+
+        int[] expectedDe = new int[]{11,10,9,7,6,4,3,2,1};
+
+        int[] actualDe = bObj.sortDescending();
+
+        for(int i = 0; i < actual.length; i++){
+            Assert.assertEquals(expectedDe[i], actualDe[i]);
+        }
 
     }
 
@@ -78,19 +86,10 @@ public class BinaryTreeTest {
     }
 
     @org.junit.Test
-
-    //Tests within this function rely on the addTest function
-    public void deepestBranchTest(){
-
-        Assert.assertEquals( 1, bObj.deepestBranch(true, null).value);
-        Assert.assertEquals( 11, bObj.deepestBranch(false, null).value);
-
-    }
-
-    @org.junit.Test
     //Tests within this function rely on the addTest function
     public void removeTest(){
 
+        bObj.remove(14, null);
         bObj.remove(2, null);
 
         Assert.assertEquals(false , bObj.exists(2, null));
